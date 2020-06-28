@@ -43,9 +43,29 @@ class Blockchain:
 
 		return True
 
-
 	# resolve conflicts between neighbors' chains
+	# for this app, we'll simply say the longest chain is the correct one
+	def resolveConflicts(self):
+		neighbors = self.nodes
+		newChain = None
 
+		maxLen = len(self.chain)
+
+		for node in neighbors:
+			response = requests.get(f"http://{node}/chain")
+
+			if response.statusCode == 200:
+				length = response.json()["length"]
+				chain = response.json()["chain"]
+
+				if length > maxLen and self.validChain(chain):
+					maxLen = length
+					newChain = chain
+		
+		if newChain:
+			self.chain = newChain
+			return True
+		return False
 
 	# create a new blok and add it to the chain
 	def newBlock(self, proof, previousHash):
@@ -92,7 +112,7 @@ class Blockchain:
 	@staticmethod
 	def validProof(lastProof, proof, lastHash):
 
-		guess = f'{lastProof}{proof}{lastHash}'.encode()
+		guess = f"{lastProof}{proof}{lastHash}".encode()
 		guess_hash = hashlib.sha256(guess).hexdigest()
 
 		return guess_hash[:4] == "0000" # if the first 4 bits are zero, our hash is considered valid
