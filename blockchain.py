@@ -49,7 +49,26 @@ class Blockchain:
 		strBlock = json.dumps(block, sort_keys=True).encode()
 		return hashlib.sha256(strBlock).hexdigest()
 
-	# check the proof of work of a blok
+	# create and validate the proof of work of a blok
+	# note that iterating the value of proof isn't a particularly efficient way of doing this, and you shouldn't do
+	# that in an actual application.
+	def proofOfWork(self, lastBlock):
+		lastProof = lastBlock["proof"]
+		lastHash = self.hash(lastBlock)
+
+		proof = 0
+		while self.validProof(lastProof, proof, lastHash) is False:
+			proof += 1
+
+		return proof
 
 	# check if a proof of work is valid
+	# note that this is a REALLY bad and inefficient way of going about this. Don't use this in an actual application,
+	# remember this is for educational purposes, not a demonstration of a functional and secure application
+	@staticmethod
+	def validProof(lastProof, proof, lastHash):
 
+		guess = f'{lastProof}{proof}{lastHash}'.encode()
+		guess_hash = hashlib.sha256(guess).hexdigest()
+
+		return guess_hash[:4] == "0000" # if the first 4 bits are zero, our hash is considered valid
