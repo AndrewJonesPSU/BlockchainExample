@@ -80,7 +80,15 @@ class Blockchain:
 		self.chain.append(block)
 		return block
 
-	# create new financial transaction
+	# create new financial transaction and add it to our current list of transactions
+	def newTransaction(self, sender, recipient, amount):
+		self.currentTransactions.append({
+			"sender": sender,
+			"recipient": recipient,
+			"amount": amount
+		})
+
+		return self.lastBlock["index"] + 1
 
 	# get last blok in the chain
 	@property
