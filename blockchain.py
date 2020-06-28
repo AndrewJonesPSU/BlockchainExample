@@ -23,11 +23,20 @@ class Blockchain:
 
 	# resolve conflicts between neighbors' chains
 
-	# create a new blok
+	# create a new blok and add it to the chain
+	def newBlock(self, proof, previousHash):
+		block = {
+			"index": len(self.chain) - 1,
+			"timestamp": time(),
+			"transactions": self.currentTransactions,
+			"proof": proof,
+			"previousHash": previousHash or self.has(self.chain[-1])
+		}
+		self.currentTransactions = []
+		self.chain.append(block)
+		return block
 
 	# create new financial transaction
-
-
 
 	# get last blok in the chain
 	@property
