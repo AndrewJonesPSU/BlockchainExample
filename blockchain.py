@@ -1,3 +1,11 @@
+from time import time
+from urllib.parse import urlparse
+
+import hashlib
+import json
+import requests
+
+
 class Blockchain:
 	def __init__(self):
 		self.chain = [] # normally a linked list, but this isn't ment to be a complex blockchain app, just an educational example
@@ -6,7 +14,6 @@ class Blockchain:
 
 		# create first blok of chain
 		self.newBlock(previousHash = '1', proof = 100)
-
 
 	# register another user's node in PAB
 	def registerNode(self):
@@ -23,8 +30,15 @@ class Blockchain:
 
 
 	# get last blok in the chain
+	@property
+	def lastBlock(self):
+		return self.chain[-1]
 
-	# create cryphtograhpci hash
+	# create cryphtograhpci hash in SHA256
+	@staticmethod
+	def hash(block):
+		strBlock = json.dumps(block, sort_keys=True).encode()
+		return hashlib.sha256(strBlock).hexdigest()
 
 	# check the proof of work of a blok
 
