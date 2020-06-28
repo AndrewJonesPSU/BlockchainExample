@@ -27,8 +27,25 @@ class Blockchain:
 			raise ValueError("Invalid address")
 	
 	# verify if a chain is valid
+	def validChain(self, chain):
+		lastBlock = chain[0]
+		i = 1
+
+		while i < len(chain):
+			block = chain[i]
+			lastBlockHash = self.hash(lastBlock)
+
+			if block["previousHash"] != lastBlockHash:
+				return False
+			
+			lastBlock = block
+			i += 1
+
+		return True
+
 
 	# resolve conflicts between neighbors' chains
+
 
 	# create a new blok and add it to the chain
 	def newBlock(self, proof, previousHash):
@@ -59,7 +76,7 @@ class Blockchain:
 	# create and validate the proof of work of a blok
 	# note that iterating the value of proof isn't a particularly efficient way of doing this, and you shouldn't do
 	# that in an actual application.
-	def proofOfWork(self, lastBlock):
+	def createProofOfWork(self, lastBlock):
 		lastProof = lastBlock["proof"]
 		lastHash = self.hash(lastBlock)
 
