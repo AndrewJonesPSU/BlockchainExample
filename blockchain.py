@@ -16,8 +16,15 @@ class Blockchain:
 		self.newBlock(previousHash = '1', proof = 100)
 
 	# register another user's node in PAB
-	def registerNode(self):
-		pass
+	def registerNode(self, address):
+		parsedURL = urlparse(address)
+
+		if parsedURL.netloc:
+			self.nodes.add(parsedURL.netloc)
+		elif parsedURL.path:
+			self.nodes.add(parsedURL.path)
+		else:
+			raise ValueError("Invalid address")
 	
 	# verify if a chain is valid
 
